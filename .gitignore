@@ -1,0 +1,10 @@
+#ignore generated folder
+bin
+obj
+
+#ignore files
+#/intersight-openapi-v*
+
+#ignore debug file
+
+#/__debug_bin
