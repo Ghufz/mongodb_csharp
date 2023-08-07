@@ -40,11 +40,33 @@ namespace MongoDBTutorial
 			return Accounts;
 		}
 
-		public int UpdateAccount()
+		public long UpdateOneAccount(Account account)
 		{
-			return 0;
+			UpdateDefinition<Account> update=null;
+			var filter = Builders<Account>.Filter.Eq(a => a.AccountHolder, account.AccountHolder);
+			if (account.Balance != 0)
+			{
+				update = Builders<Account>.Update.Set(a => a.Balance, account.Balance);
+			}
+			else if (account.AccountType != null)
+			{
+				update = Builders<Account>.Update.Set(a => a.AccountType, account.AccountType);
+			}
+			else
+			{
+				return 0;
+			}
+			
+			var result = _accounts.UpdateOne(filter,update);
+			return result.ModifiedCount;
 		}
 
-
+		public long UpdateManayAccount()
+		{
+			var filter = Builders<Account>.Filter.Lt(a => a.Balance , 3000);
+			var update = Builders<Account>.Update.Inc(a => a.Balance, 500);
+			var result = _accounts.UpdateMany(filter, update);
+			return result.MatchedCount;
+		}
 	}
 }
